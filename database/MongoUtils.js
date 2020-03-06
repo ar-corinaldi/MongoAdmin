@@ -26,6 +26,31 @@ function MongoUtils() {
         .finally(() => client.close()); // Returns a promise that will resolve to the list of databases
     });
   };
+
+  mu.findAll = (dbName, collection) => {
+    const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
+    return client.connect().then(client => {
+      return client
+        .db(dbName)
+        .collection(collection)
+        .find({})
+        .sort({_id:-1})
+        .toArray()
+        .finally(() => client.close()); // Returns a promise that will resolve to the list of databases
+    });
+  };
+
+  mu.insert = (dbName, collection, query) => {
+    const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
+    return client.connect().then(client => {
+      return client
+        .db(dbName)
+        .collection(collection)
+        .insertOne(query)
+        .finally(() => client.close());
+    });
+  };
+
   return mu;
 }
 
