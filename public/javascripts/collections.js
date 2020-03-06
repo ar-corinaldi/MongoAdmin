@@ -35,12 +35,12 @@ selectCollection.addEventListener("change", () => {
 
 const renderDataCollections = data => {
   console.log(data);
-  let size = { cont: 0};
-  addTableHeaders(data, size);
-  addTableContent(data, size);
+  addTableHeaders(data);
+  addTableContent(data);
+  createForm(data);
 };
 
-const addTableContent = (data, size) => {
+const addTableContent = data => {
   const currentCollections = document.querySelectorAll("#table-content > tr");
   currentCollections.forEach(col => {
     col.parentNode.removeChild(col);
@@ -53,19 +53,16 @@ const addTableContent = (data, size) => {
     tbody.appendChild(tr);
 
     // Iterating through the properties of every json
-    let i = 0;
     for (let prop in element) {
-      if (i < size.cont) {
-        let td = document.createElement("td");
-        tr.appendChild(td);
-        td.textContent = `${element[prop]}`;
-      }
-      i++;
+      let td = document.createElement("td");
+      td.setAttribute("id", element[prop]);
+      tr.appendChild(td);
+      td.textContent = `${element[prop]}`;
     }
   });
 };
 
-const addTableHeaders = (data, size) => {
+const addTableHeaders = data => {
   let thead = document.getElementById("table-headers");
   const currentTableHeaders = document.querySelector("#table-headers > tr");
   if (currentTableHeaders)
@@ -77,12 +74,47 @@ const addTableHeaders = (data, size) => {
   if (data.length > 0) element = data[0];
   // Iterating through the properties of every json
   console.log("element", element);
-  console.log(size);
   for (let prop in element) {
     let th = document.createElement("th");
     tr.appendChild(th);
     th.textContent = prop;
-    size.cont = size.cont + 1;
+  }
+};
+
+const createForm = data => {
+  let form = document.getElementById("form");
+  const currentForm = document.querySelectorAll("form > div");
+  for (let f of currentForm) {
+    if (f) f.parentNode.removeChild(f);
+  }
+  /*
+  <div class="row">
+    <div class="form-group">
+        <label for="projectName">Project Name</label>
+        <input id="projectName" name="projectName" type="text" required>
+    </div>
+  </div>
+  */
+
+  let element = {};
+  if (data.length > 0) element = data[0];
+  for (let prop in element) {
+    const div = document.createElement("div");
+    div.setAttribute("class", "form-group");
+
+    const label = document.createElement("label");
+    label.textContent = prop;
+    label.setAttribute("for", prop);
+    const input = document.createElement("input");
+    input.setAttribute("required", "true");
+    input.setAttribute("name", prop);
+    input.setAttribute("id", prop);
+
+    if (prop !== "_id") {
+      form.appendChild(div);
+      div.appendChild(label);
+      div.appendChild(input);
+    }
   }
 };
 
@@ -104,3 +136,26 @@ const realizarFetchCollection = url => {
     })
     .catch(err => console.log(err));
 };
+
+let _id = "";
+const butDelete = document.getElementById("butDelete");
+butDelete.addEventListener("click", () => {
+  fetch("/delete/"+_id);
+});
+
+const inputId = document.getElementById("_id");
+inputId.addEventListener("input", (e) => {
+  console.log(e.srcElement.value);
+  const content = document.querySelectorAll("#table-content > tr > td");  
+  const vals = document.querySelectorAll("#table-content > tr > td[id^='"+e.srcElement.value +"']");
+  content.forEach( element => {
+    console.log("entra aca");
+    element.setAttribute("style", "color:black;");
+  });
+  vals.forEach(element => {
+    console.log(element);
+    element.setAttribute("style", "color:yellow;");
+    _id = element.textContent;
+  });
+  
+});

@@ -14,9 +14,18 @@ router.get("/", function(req, res) {
   res.render("index", { title: "Express" });
 });
 
+router.get("/delete/:id", function(req, res) {
+  const id = req.params;
+  const query = {_id: mongo.ObjectId(id.id) }; 
+  console.log(query);
+  mongo.delete(dbName, collection, query);
+  console.log("redirecting");
+  res.redirect("/databases");
+});
+
 router.get("/databases/:dbName", function(req, res) {
   const dbName = req.params.dbName;
-  console.log("Ping"+dbName);
+  console.log("Ping" + dbName);
   mongo.collections(dbName).then(cols => {
     console.log("Collections", cols);
     res.json(cols);
@@ -24,11 +33,8 @@ router.get("/databases/:dbName", function(req, res) {
 });
 
 router.post("/databases/add", function(req, res) {
-  const projectName = req.body.projectName;
-  const grade = req.body.grade;
-  const query = { project_name: projectName, grade };
-  console.log(query);
-  mongo.insert(dbName, collection, query);
+  console.log(req.body);
+  mongo.insert(dbName, collection, req.body);
   res.redirect("/databases");
 });
 
