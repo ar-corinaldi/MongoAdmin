@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title>Mongo Admin</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <nav class="navbar navbar-light bg-primary">
+    <a class="navbar-brand" href="../../">Start</a>
+  </nav>
+  <div class="container">
+    <h1>Mongo Admin</h1>
+    <p>Manage your Databases!</p>
+    <form action="/databases" method="POST">
+      <div class="form-group">
+        <label for="url">URL</label>
+        <input name="url" id="url" type="text">
+      </div>
+      <button id="butManage" type="submit" class="but-primary">Go to manage DB</button>
+    </form>
+    <div class="row">
+      <div class="alert alert-warning" role="alert">
+        In case your url is EMPTY, it is going to my DB in Mongo Atlas!
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

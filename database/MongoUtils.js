@@ -3,8 +3,11 @@ const MongoClient = mongodb.MongoClient;
 function MongoUtils() {
   const mu = {};
   const ObjectId = mongodb.ObjectID;
-  const url =
-    "mongodb+srv://allan9899:hola1234@pensiondb-y5joy.mongodb.net/test?retryWrites=true&w=majority";
+  let url = process.env.DB_URL || "mongodb://localhost:27017";
+  mu.url = paramUrl => {
+    url = process.env.DB_URL || "mongodb://localhost:27017";
+    if (paramUrl !== "") url = paramUrl;
+  };
 
   mu.ObjectId = ObjectId;
   mu.databases = () => {
@@ -55,7 +58,7 @@ function MongoUtils() {
 
   mu.delete = (dbName, collection, query) => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
-    
+
     return client.connect().then(client => {
       return client
         .db(dbName)
@@ -65,6 +68,17 @@ function MongoUtils() {
     });
   };
 
+  mu.update = (dbName, collection, query, update) => {
+    const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
+    console.log("URL",url);
+    return client.connect().then(client => {
+      return client
+        .db(dbName)
+        .collection(collection)
+        .updateOne(query, update)
+        .finally(() => client.close());
+    });
+  };
   return mu;
 }
 

@@ -3,6 +3,10 @@ var router = express.Router();
 const mongo = require("../database/MongoUtils");
 let dbName = "";
 let collection = "";
+router.post("/databases", function(req, res) {
+  mongo.url(req.body.url);
+  res.redirect("/databases");
+});
 /* GET home page. */
 router.get("/databases", function(req, res) {
   mongo.databases().then(dbs => {
@@ -11,12 +15,12 @@ router.get("/databases", function(req, res) {
 });
 
 router.get("/", function(req, res) {
-  res.render("index", { title: "Express" });
+  res.render("index");
 });
 
 router.get("/delete/:id", function(req, res) {
   const id = req.params;
-  const query = {_id: mongo.ObjectId(id.id) }; 
+  const query = { _id: mongo.ObjectId(id.id) };
   console.log(query);
   mongo.delete(dbName, collection, query);
   console.log("redirecting");
@@ -35,6 +39,25 @@ router.get("/databases/:dbName", function(req, res) {
 router.post("/databases/add", function(req, res) {
   console.log(req.body);
   mongo.insert(dbName, collection, req.body);
+  res.redirect("/databases");
+});
+
+router.post("/databases/update", function(req, res) {
+  const $set = {};
+  for (let prop in req.body) {
+    if (prop !== "_id") {
+      $set[prop] = req.body[prop];
+    }
+  }
+  const query = {
+    _id: mongo.ObjectId(req.body._id)
+  };
+  
+  const update = {
+    $set
+  };
+  console.log(update);
+  mongo.update(dbName, collection, query, update);
   res.redirect("/databases");
 });
 

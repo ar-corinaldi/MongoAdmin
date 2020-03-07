@@ -1,3 +1,4 @@
+let inputUpdateId = null;
 const select = document.getElementById("databases");
 const selectCollection = document.getElementById("collections");
 
@@ -38,6 +39,24 @@ const renderDataCollections = data => {
   addTableHeaders(data);
   addTableContent(data);
   createForm(data);
+  createFormUpdate(data);
+  inputUpdateId = document.getElementById("_idUpdate");
+  inputUpdateId.addEventListener("input", e => {
+    console.log(e.srcElement.value);
+    const content = document.querySelectorAll("#table-content > tr > td");
+    const vals = document.querySelectorAll(
+      "#table-content > tr > td[id^='" + e.srcElement.value + "']"
+    );
+    content.forEach(element => {
+      console.log("entra aca");
+      element.setAttribute("style", "color:black;");
+    });
+    vals.forEach(element => {
+      console.log(element);
+      element.setAttribute("style", "color:yellow;");
+      _id = element.textContent;
+    });
+  });
 };
 
 const addTableContent = data => {
@@ -81,9 +100,39 @@ const addTableHeaders = data => {
   }
 };
 
+const createFormUpdate = data => {
+  let form = document.getElementById("form-update");
+  const currentForm = document.querySelectorAll("#form-update > div");
+  for (let f of currentForm) {
+    if (f) f.parentNode.removeChild(f);
+  }
+  let element = {};
+  if (data.length > 0) element = data[0];
+  for (let prop in element) {
+    const div = document.createElement("div");
+    div.setAttribute("class", "form-group");
+
+    const label = document.createElement("label");
+    label.textContent = prop;
+    label.setAttribute("for", prop);
+    const input = document.createElement("input");
+    input.setAttribute("required", "true");
+    input.setAttribute("name", prop);
+
+    input.setAttribute("id", prop);
+    if (prop === "_id") {
+      input.setAttribute("placeholder", "Must have the exact _id");
+      input.setAttribute("id", prop + "Update");
+    }
+    form.appendChild(div);
+    div.appendChild(label);
+    div.appendChild(input);
+  }
+};
+
 const createForm = data => {
   let form = document.getElementById("form");
-  const currentForm = document.querySelectorAll("form > div");
+  const currentForm = document.querySelectorAll("#form > div");
   for (let f of currentForm) {
     if (f) f.parentNode.removeChild(f);
   }
@@ -140,15 +189,17 @@ const realizarFetchCollection = url => {
 let _id = "";
 const butDelete = document.getElementById("butDelete");
 butDelete.addEventListener("click", () => {
-  fetch("/delete/"+_id);
+  fetch("/delete/" + _id);
 });
 
-const inputId = document.getElementById("_id");
-inputId.addEventListener("input", (e) => {
+const inputId = document.getElementById("_idDelete");
+inputId.addEventListener("input", e => {
   console.log(e.srcElement.value);
-  const content = document.querySelectorAll("#table-content > tr > td");  
-  const vals = document.querySelectorAll("#table-content > tr > td[id^='"+e.srcElement.value +"']");
-  content.forEach( element => {
+  const content = document.querySelectorAll("#table-content > tr > td");
+  const vals = document.querySelectorAll(
+    "#table-content > tr > td[id^='" + e.srcElement.value + "']"
+  );
+  content.forEach(element => {
     console.log("entra aca");
     element.setAttribute("style", "color:black;");
   });
@@ -157,5 +208,4 @@ inputId.addEventListener("input", (e) => {
     element.setAttribute("style", "color:yellow;");
     _id = element.textContent;
   });
-  
 });
