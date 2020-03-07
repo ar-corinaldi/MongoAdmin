@@ -189,7 +189,8 @@ const realizarFetchCollection = url => {
 let _id = "";
 const butDelete = document.getElementById("butDelete");
 butDelete.addEventListener("click", () => {
-  fetch("/delete/" + _id);
+  fetch("/delete/" + _id)
+    .then(window.location.reload());
 });
 
 const inputId = document.getElementById("_idDelete");
