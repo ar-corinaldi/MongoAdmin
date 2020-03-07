@@ -40,6 +40,7 @@ function MongoUtils() {
         .collection(collection)
         .find({})
         .sort({ _id: -1 })
+        .limit(20)
         .toArray()
         .finally(() => client.close()); // Returns a promise that will resolve to the list of databases
     });
