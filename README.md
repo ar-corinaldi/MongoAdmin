@@ -6,6 +6,7 @@ MongoAdmin is a web application where you can connect to your online servers and
 
 <ul> <li>Let you connect to any server</li> <li>List of all databases from a server</li> <li>List of all collections from a database</li> <li>List of 20 first records of a collection</li> <li>Create a new record</li> <li>Update a new record</li> <li>Delete a new record</li><li>Special feature: change color of the letter when you want to find an specific _id</li> </ul>
 ![alt text](https://raw.githubusercontent.com/ar-corinaldi/MongoAdmin/master/public/images/special_featured.png)
+
 ## Demo
 
 [https://mongo-admin-2020.herokuapp.com/](https://mongo-admin-2020.herokuapp.com/)
