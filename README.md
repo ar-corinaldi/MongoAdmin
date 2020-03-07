@@ -19,7 +19,6 @@ MongoAdmin is a web application where you can connect to your online servers and
   <li>HTML5</li>
   <li>CSS</li>
   </ul>
-<br>
 
 ## Requirements
 
