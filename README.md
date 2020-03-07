@@ -30,7 +30,7 @@ You need to have npm and mongodb installed on your computer to run this locally.
 1. Clone the repository
 2. Get in the folder of the project
 3. Install dependencies with the package manager [yarn](https://yarnpkg.com/)
-
+4. Deploy
 ```bash
 git clone https://github.com/ar-corinaldi/MongoAdmin.git
 cd MongoAdmin
