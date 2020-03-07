@@ -2,14 +2,20 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 function MongoUtils() {
   const mu = {};
+  
   const ObjectId = mongodb.ObjectID;
   let url = process.env.DB_URL || "mongodb://localhost:27017";
+
+  // To change url server
   mu.url = paramUrl => {
     url = process.env.DB_URL || "mongodb://localhost:27017";
     if (paramUrl !== "") url = paramUrl;
   };
 
+  // To search _id
   mu.ObjectId = ObjectId;
+
+  // List of DBs
   mu.databases = () => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
     return client.connect().then(client => {
@@ -21,6 +27,7 @@ function MongoUtils() {
     });
   };
 
+  // List of collections
   mu.collections = dbName => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
     return client.connect().then(client => {
@@ -32,6 +39,7 @@ function MongoUtils() {
     });
   };
 
+  // To get first 20 records from a collection
   mu.findAll = (dbName, collection) => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
     return client.connect().then(client => {
@@ -46,6 +54,7 @@ function MongoUtils() {
     });
   };
 
+  // Insert a new document in a collection
   mu.insert = (dbName, collection, query) => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
     return client.connect().then(client => {
@@ -57,6 +66,7 @@ function MongoUtils() {
     });
   };
 
+  // Delete a new record in a collection
   mu.delete = (dbName, collection, query) => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
 
@@ -69,9 +79,9 @@ function MongoUtils() {
     });
   };
 
+  // Update a new record from a collection
   mu.update = (dbName, collection, query, update) => {
     const client = new MongoClient(url, { useUnifiedTopology: true }); // useUnifiedTopology removes a warning
-    console.log("URL",url);
     return client.connect().then(client => {
       return client
         .db(dbName)

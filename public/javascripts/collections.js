@@ -6,12 +6,13 @@ let dbName = select.value;
 let collection = selectCollection.value;
 let url = "/databases/" + dbName + "/" + collection;
 
+// Event to fetch collections when a database change
 select.addEventListener("change", () => {
   dbName = select.value;
-  console.log("fetch");
   realizarFetchDB(dbName);
 });
 
+// Render the select with valid options collections from the DB
 const renderCollections = data => {
   const currentCollections = document.querySelectorAll("#collections > option");
   currentCollections.forEach(col => {
@@ -27,6 +28,7 @@ const renderCollections = data => {
   });
 };
 
+// Event to do the fetch when a collection change
 selectCollection.addEventListener("change", () => {
   dbName = select.value;
   collection = selectCollection.value;
@@ -34,25 +36,28 @@ selectCollection.addEventListener("change", () => {
   realizarFetchCollection(url);
 });
 
+// Render de records of the data and create the forms
 const renderDataCollections = data => {
-  console.log(data);
+  // Add headers of the collection dynamically
   addTableHeaders(data);
+  // Add content of the collection dynamically
   addTableContent(data);
+  // Create a form to create a new record
   createForm(data);
+  // Create a form to update a record
   createFormUpdate(data);
+
+  // Code of special featured
   inputUpdateId = document.getElementById("_idUpdate");
   inputUpdateId.addEventListener("input", e => {
-    console.log(e.srcElement.value);
     const content = document.querySelectorAll("#table-content > tr > td");
     const vals = document.querySelectorAll(
       "#table-content > tr > td[id^='" + e.srcElement.value + "']"
     );
     content.forEach(element => {
-      console.log("entra aca");
       element.setAttribute("style", "color:black;");
     });
     vals.forEach(element => {
-      console.log(element);
       element.setAttribute("style", "color:yellow;");
       _id = element.textContent;
     });
@@ -92,7 +97,6 @@ const addTableHeaders = data => {
   let element = {};
   if (data.length > 0) element = data[0];
   // Iterating through the properties of every json
-  console.log("element", element);
   for (let prop in element) {
     let th = document.createElement("th");
     tr.appendChild(th);
@@ -167,16 +171,17 @@ const createForm = data => {
   }
 };
 
+// Fetch to render DB collections
 const realizarFetchDB = dbName => {
   fetch("/databases/" + dbName)
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       renderCollections(data);
     })
     .catch(err => console.log(err));
 };
 
+// Fetch to render data from collections
 const realizarFetchCollection = url => {
   fetch(url)
     .then(res => res.json())
@@ -187,25 +192,24 @@ const realizarFetchCollection = url => {
 };
 
 let _id = "";
+// When button delete click do a fetch
 const butDelete = document.getElementById("butDelete");
 butDelete.addEventListener("click", () => {
   fetch("/delete/" + _id)
     .then(window.location.reload());
 });
 
+// Code to featured for delete
 const inputId = document.getElementById("_idDelete");
 inputId.addEventListener("input", e => {
-  console.log(e.srcElement.value);
   const content = document.querySelectorAll("#table-content > tr > td");
   const vals = document.querySelectorAll(
     "#table-content > tr > td[id^='" + e.srcElement.value + "']"
   );
   content.forEach(element => {
-    console.log("entra aca");
     element.setAttribute("style", "color:black;");
   });
   vals.forEach(element => {
-    console.log(element);
     element.setAttribute("style", "color:yellow;");
     _id = element.textContent;
   });
